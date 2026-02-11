@@ -57,14 +57,14 @@ EOT
     source_server_id                  = optional(string)
     sku_name                          = optional(string)
     replication_role                  = optional(string)
-    public_network_access_enabled     = optional(bool, true)
+    public_network_access_enabled     = optional(bool) # Default: true
     private_dns_zone_id               = optional(string)
     point_in_time_restore_time_in_utc = optional(string)
-    geo_redundant_backup_enabled      = optional(bool, false)
+    geo_redundant_backup_enabled      = optional(bool) # Default: false
     delegated_subnet_id               = optional(string)
     create_mode                       = optional(string)
     backup_retention_days             = optional(number)
-    auto_grow_enabled                 = optional(bool, false)
+    auto_grow_enabled                 = optional(bool) # Default: false
     administrator_password_wo_version = optional(number)
     administrator_password_wo         = optional(string)
     administrator_password            = optional(string)
@@ -72,8 +72,8 @@ EOT
     version                           = optional(string)
     zone                              = optional(string)
     authentication = optional(object({
-      active_directory_auth_enabled = optional(bool, false)
-      password_auth_enabled         = optional(bool, true)
+      active_directory_auth_enabled = optional(bool) # Default: false
+      password_auth_enabled         = optional(bool) # Default: true
       tenant_id                     = optional(string)
     }))
     customer_managed_key = optional(object({
@@ -91,9 +91,9 @@ EOT
       type         = string
     }))
     maintenance_window = optional(object({
-      day_of_week  = optional(number, 0)
-      start_hour   = optional(number, 0)
-      start_minute = optional(number, 0)
+      day_of_week  = optional(number) # Default: 0
+      start_hour   = optional(number) # Default: 0
+      start_minute = optional(number) # Default: 0
     }))
   }))
 }
