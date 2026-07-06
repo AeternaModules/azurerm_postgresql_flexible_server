@@ -34,6 +34,14 @@ resource "azurerm_postgresql_flexible_server" "postgresql_flexible_servers" {
     }
   }
 
+  dynamic "cluster" {
+    for_each = each.value.cluster != null ? [each.value.cluster] : []
+    content {
+      default_database_name = cluster.value.default_database_name
+      size                  = cluster.value.size
+    }
+  }
+
   dynamic "customer_managed_key" {
     for_each = each.value.customer_managed_key != null ? [each.value.customer_managed_key] : []
     content {
