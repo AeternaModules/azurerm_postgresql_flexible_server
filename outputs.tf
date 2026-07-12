@@ -1,3 +1,7 @@
+output "postgresql_flexible_servers_id" {
+  description = "Map of id values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
+  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => v.id }
+}
 output "postgresql_flexible_servers_administrator_login" {
   description = "Map of administrator_login values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
   value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => v.administrator_login }
