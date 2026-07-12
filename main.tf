@@ -1,3 +1,8 @@
+data "azurerm_key_vault_secret" "administrator_password" {
+  for_each     = { for k, v in var.postgresql_flexible_servers : k => v if v.administrator_password_key_vault_id != null && v.administrator_password_key_vault_secret_name != null }
+  name         = each.value.administrator_password_key_vault_secret_name
+  key_vault_id = each.value.administrator_password_key_vault_id
+}
 resource "azurerm_postgresql_flexible_server" "postgresql_flexible_servers" {
   for_each = var.postgresql_flexible_servers
 
@@ -20,7 +25,7 @@ resource "azurerm_postgresql_flexible_server" "postgresql_flexible_servers" {
   auto_grow_enabled                 = each.value.auto_grow_enabled
   administrator_password_wo_version = each.value.administrator_password_wo_version
   administrator_password_wo         = each.value.administrator_password_wo
-  administrator_password            = each.value.administrator_password
+  administrator_password            = each.value.administrator_password != null ? each.value.administrator_password : try(data.azurerm_key_vault_secret.administrator_password[each.key].value, null)
   administrator_login               = each.value.administrator_login
   version                           = each.value.version
   zone                              = each.value.zone

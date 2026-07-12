@@ -8,6 +8,8 @@ Required:
 Optional:
     - administrator_login
     - administrator_password
+    - administrator_password_key_vault_id (alternative to administrator_password - read from Key Vault instead)
+    - administrator_password_key_vault_secret_name (alternative to administrator_password - read from Key Vault instead)
     - administrator_password_wo
     - administrator_password_wo_version
     - auto_grow_enabled
@@ -51,29 +53,31 @@ Optional:
 EOT
 
   type = map(object({
-    location                          = string
-    name                              = string
-    resource_group_name               = string
-    tags                              = optional(map(string))
-    storage_tier                      = optional(string)
-    storage_mb                        = optional(number)
-    source_server_id                  = optional(string)
-    sku_name                          = optional(string)
-    replication_role                  = optional(string)
-    public_network_access_enabled     = optional(bool) # Default: true
-    private_dns_zone_id               = optional(string)
-    point_in_time_restore_time_in_utc = optional(string)
-    geo_redundant_backup_enabled      = optional(bool) # Default: false
-    delegated_subnet_id               = optional(string)
-    create_mode                       = optional(string)
-    backup_retention_days             = optional(number)
-    auto_grow_enabled                 = optional(bool) # Default: false
-    administrator_password_wo_version = optional(number)
-    administrator_password_wo         = optional(string)
-    administrator_password            = optional(string)
-    administrator_login               = optional(string)
-    version                           = optional(string)
-    zone                              = optional(string)
+    location                                     = string
+    name                                         = string
+    resource_group_name                          = string
+    tags                                         = optional(map(string))
+    storage_tier                                 = optional(string)
+    storage_mb                                   = optional(number)
+    source_server_id                             = optional(string)
+    sku_name                                     = optional(string)
+    replication_role                             = optional(string)
+    public_network_access_enabled                = optional(bool) # Default: true
+    private_dns_zone_id                          = optional(string)
+    point_in_time_restore_time_in_utc            = optional(string)
+    geo_redundant_backup_enabled                 = optional(bool) # Default: false
+    delegated_subnet_id                          = optional(string)
+    create_mode                                  = optional(string)
+    backup_retention_days                        = optional(number)
+    auto_grow_enabled                            = optional(bool) # Default: false
+    administrator_password_wo_version            = optional(number)
+    administrator_password_wo                    = optional(string)
+    administrator_password                       = optional(string)
+    administrator_password_key_vault_id          = optional(string)
+    administrator_password_key_vault_secret_name = optional(string)
+    administrator_login                          = optional(string)
+    version                                      = optional(string)
+    zone                                         = optional(string)
     authentication = optional(object({
       active_directory_auth_enabled = optional(bool) # Default: false
       password_auth_enabled         = optional(bool) # Default: true
