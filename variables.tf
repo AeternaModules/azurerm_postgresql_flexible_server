@@ -62,14 +62,14 @@ EOT
     source_server_id                             = optional(string)
     sku_name                                     = optional(string)
     replication_role                             = optional(string)
-    public_network_access_enabled                = optional(bool) # Default: true
+    public_network_access_enabled                = optional(bool)
     private_dns_zone_id                          = optional(string)
     point_in_time_restore_time_in_utc            = optional(string)
-    geo_redundant_backup_enabled                 = optional(bool) # Default: false
+    geo_redundant_backup_enabled                 = optional(bool)
     delegated_subnet_id                          = optional(string)
     create_mode                                  = optional(string)
     backup_retention_days                        = optional(number)
-    auto_grow_enabled                            = optional(bool) # Default: false
+    auto_grow_enabled                            = optional(bool)
     administrator_password_wo_version            = optional(number)
     administrator_password_wo                    = optional(string)
     administrator_password                       = optional(string)
@@ -79,12 +79,12 @@ EOT
     version                                      = optional(string)
     zone                                         = optional(string)
     authentication = optional(object({
-      active_directory_auth_enabled = optional(bool) # Default: false
-      password_auth_enabled         = optional(bool) # Default: true
+      active_directory_auth_enabled = optional(bool)
+      password_auth_enabled         = optional(bool)
       tenant_id                     = optional(string)
     }))
     cluster = optional(object({
-      default_database_name = optional(string) # Default: "postgres"
+      default_database_name = optional(string)
       size                  = number
     }))
     customer_managed_key = optional(object({
@@ -102,99 +102,11 @@ EOT
       type         = string
     }))
     maintenance_window = optional(object({
-      day_of_week  = optional(number) # Default: 0
-      start_hour   = optional(number) # Default: 0
-      start_minute = optional(number) # Default: 0
+      day_of_week  = optional(number)
+      start_hour   = optional(number)
+      start_minute = optional(number)
     }))
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.postgresql_flexible_servers : (
-        v.administrator_password == null || (length(v.administrator_password) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.postgresql_flexible_servers : (
-        v.administrator_password_wo == null || (length(v.administrator_password_wo) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.postgresql_flexible_servers : (
-        v.authentication == null || (v.authentication.tenant_id == null || (can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", v.authentication.tenant_id))))
-      )
-    ])
-    error_message = "must be a valid UUID"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.postgresql_flexible_servers : (
-        v.zone == null || (length(v.zone) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.postgresql_flexible_servers : (
-        v.maintenance_window == null || (v.maintenance_window.day_of_week == null || (v.maintenance_window.day_of_week >= 0 && v.maintenance_window.day_of_week <= 6))
-      )
-    ])
-    error_message = "must be between 0 and 6"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.postgresql_flexible_servers : (
-        v.maintenance_window == null || (v.maintenance_window.start_hour == null || (v.maintenance_window.start_hour >= 0 && v.maintenance_window.start_hour <= 23))
-      )
-    ])
-    error_message = "must be between 0 and 23"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.postgresql_flexible_servers : (
-        v.maintenance_window == null || (v.maintenance_window.start_minute == null || (v.maintenance_window.start_minute >= 0 && v.maintenance_window.start_minute <= 59))
-      )
-    ])
-    error_message = "must be between 0 and 59"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.postgresql_flexible_servers : (
-        v.backup_retention_days == null || (v.backup_retention_days >= 7 && v.backup_retention_days <= 35)
-      )
-    ])
-    error_message = "must be between 7 and 35"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.postgresql_flexible_servers : (
-        v.high_availability == null || (v.high_availability.standby_availability_zone == null || (length(v.high_availability.standby_availability_zone) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.postgresql_flexible_servers : (
-        v.cluster == null || (v.cluster.size >= 1 && v.cluster.size <= 20)
-      )
-    ])
-    error_message = "must be between 1 and 20"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.postgresql_flexible_servers : (
-        v.cluster == null || (v.cluster.default_database_name == null || (length(v.cluster.default_database_name) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_postgresql_flexible_server's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -229,6 +141,15 @@ EOT
   #   source:    location.EnhancedValidate: no recognizable `if ... { errors = append(...) }` pattern - read it by hand
   # path: administrator_login
   #   source:    validation.All(...) - no translation rule yet, add one
+  # path: administrator_password
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: administrator_password_wo
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: authentication.tenant_id
+  #   condition: can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", value))
+  #   message:   must be a valid UUID
   # path: sku_name
   #   source:    [from validate.FlexibleServerSkuName] !ok
   # path: sku_name
@@ -239,6 +160,9 @@ EOT
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
   # path: version
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: zone
+  #   condition: length(value) > 0
+  #   message:   must not be empty
   # path: create_mode
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
   # path: delegated_subnet_id
@@ -255,8 +179,23 @@ EOT
   #   source:    [from servers.ValidateFlexibleServerID] !ok
   # path: source_server_id
   #   source:    [from servers.ValidateFlexibleServerID] err != nil
+  # path: maintenance_window.day_of_week
+  #   condition: value >= 0 && value <= 6
+  #   message:   must be between 0 and 6
+  # path: maintenance_window.start_hour
+  #   condition: value >= 0 && value <= 23
+  #   message:   must be between 0 and 23
+  # path: maintenance_window.start_minute
+  #   condition: value >= 0 && value <= 59
+  #   message:   must be between 0 and 59
+  # path: backup_retention_days
+  #   condition: value >= 7 && value <= 35
+  #   message:   must be between 7 and 35
   # path: high_availability.mode
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: high_availability.standby_availability_zone
+  #   condition: length(value) > 0
+  #   message:   must not be empty
   # path: replication_role
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
   # path: identity.type
@@ -281,6 +220,12 @@ EOT
   #   source:    [from commonids.ValidateUserAssignedIdentityID] !ok
   # path: customer_managed_key.geo_backup_user_assigned_identity_id
   #   source:    [from commonids.ValidateUserAssignedIdentityID] err != nil
+  # path: cluster.size
+  #   condition: value >= 1 && value <= 20
+  #   message:   must be between 1 and 20
+  # path: cluster.default_database_name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
   # path: tags
   #   condition: length(value) <= 50
   #   message:   [from tags.Validate: invalid when len(value) > 50]
