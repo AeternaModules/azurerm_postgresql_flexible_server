@@ -21,7 +21,7 @@ output "postgresql_flexible_servers_administrator_password_wo_version" {
 }
 output "postgresql_flexible_servers_authentication" {
   description = "Map of authentication values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
-  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => v.authentication if v.authentication != null && length(v.authentication) > 0 }
+  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => one(v.authentication) if v.authentication != null && length(v.authentication) > 0 }
 }
 output "postgresql_flexible_servers_auto_grow_enabled" {
   description = "Map of auto_grow_enabled values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
@@ -33,7 +33,7 @@ output "postgresql_flexible_servers_backup_retention_days" {
 }
 output "postgresql_flexible_servers_cluster" {
   description = "Map of cluster values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
-  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => v.cluster if v.cluster != null && length(v.cluster) > 0 }
+  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => one(v.cluster) if v.cluster != null && length(v.cluster) > 0 }
 }
 output "postgresql_flexible_servers_create_mode" {
   description = "Map of create_mode values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
@@ -41,7 +41,7 @@ output "postgresql_flexible_servers_create_mode" {
 }
 output "postgresql_flexible_servers_customer_managed_key" {
   description = "Map of customer_managed_key values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
-  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => v.customer_managed_key if v.customer_managed_key != null && length(v.customer_managed_key) > 0 }
+  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => one(v.customer_managed_key) if v.customer_managed_key != null && length(v.customer_managed_key) > 0 }
 }
 output "postgresql_flexible_servers_delegated_subnet_id" {
   description = "Map of delegated_subnet_id values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
@@ -57,11 +57,11 @@ output "postgresql_flexible_servers_geo_redundant_backup_enabled" {
 }
 output "postgresql_flexible_servers_high_availability" {
   description = "Map of high_availability values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
-  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => v.high_availability if v.high_availability != null && length(v.high_availability) > 0 }
+  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => one(v.high_availability) if v.high_availability != null && length(v.high_availability) > 0 }
 }
 output "postgresql_flexible_servers_identity" {
   description = "Map of identity values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
-  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => v.identity if v.identity != null && length(v.identity) > 0 }
+  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => one(v.identity) if v.identity != null && length(v.identity) > 0 }
 }
 output "postgresql_flexible_servers_location" {
   description = "Map of location values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
@@ -69,7 +69,7 @@ output "postgresql_flexible_servers_location" {
 }
 output "postgresql_flexible_servers_maintenance_window" {
   description = "Map of maintenance_window values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
-  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => v.maintenance_window if v.maintenance_window != null && length(v.maintenance_window) > 0 }
+  value       = { for k, v in azurerm_postgresql_flexible_server.postgresql_flexible_servers : k => one(v.maintenance_window) if v.maintenance_window != null && length(v.maintenance_window) > 0 }
 }
 output "postgresql_flexible_servers_name" {
   description = "Map of name values across all postgresql_flexible_servers, keyed the same as var.postgresql_flexible_servers"
